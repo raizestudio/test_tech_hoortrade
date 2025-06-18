@@ -1,0 +1,29 @@
+# Env
+.venv/
+.env
+.env.local
+
+
+# Python
+*.pyc
+pycache/
+__pycache__/
+
+# Django
+*.log
+
+# Db
+*.sqlite3
+
+# Static files
+media/
+static/
+
+# Tests
+coverage.xml
+.cov_html/
+htmlcov/
+
+
+# Other
+dev_shell.py
