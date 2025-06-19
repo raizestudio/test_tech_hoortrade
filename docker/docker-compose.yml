@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: test_tech_hoortrade
+    depends_on:
+      - db
+      - rabbitmq
+      - valkey
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=psql://hoortrade:hoortrade@db:5432/hoortrade
+    networks:
+      - app_network
+
+  db:
+    image: postgres:17
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: hoortrade
+      POSTGRES_PASSWORD: hoortrade
+      POSTGRES_DB: hoortrade
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - app_network
+
+  valkey:
+    image: valkey/valkey:latest
+    container_name: valkey
+    ports:
+      - "6379:6379"
+    environment:
+      - DATABASE_URL=postgres://hoortrade:hoortrade@db:5432/valkeydb
+      - VALKEY_SECRET_KEY=secret_key
+    volumes:
+      - valkey-db-data:/var/lib/valkey
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+  rabbitmq-data:
+  valkey-db-data:
+
+networks:
+  app_network:
+    driver: bridge

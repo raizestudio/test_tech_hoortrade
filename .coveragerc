@@ -1,0 +1,23 @@
+[run]
+branch = True
+
+omit =
+  **/__init__.py
+  **/migrations/**
+  **/tests/**
+  **/admin.py
+  **/asgi.py
+  **/conftest.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self\.debug
+fail_under = 0
+
+[html]
+directory = .cov_html
+
+[xml]
+output = coverage.xml
