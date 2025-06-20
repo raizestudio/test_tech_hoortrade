@@ -1,0 +1,59 @@
+name: API Tests
+
+on:
+  push:
+    branches:
+      - main
+      - preprod
+      - prod
+      
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17 
+        env:
+          POSTGRES_USER: hoortrade
+          POSTGRES_PASSWORD: hoortrade
+          POSTGRES_DB: hoortrade
+          
+        ports:
+          - 5432:5432
+        options: --health-cmd="pg_isready -U postgres" --health-timeout=5s --health-start-period=10s --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13" 
+
+      - name: Install uv
+        run: |
+          curl -Ls https://astral.sh/uv/install.sh | bash
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies with uv
+        run: uv pip install
+      
+      
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          while ! pg_isready -h localhost -U hoortrade -d hoortrade; do
+            echo "Waiting for PostgreSQL..."
+            sleep 1
+          done
+      
+      - name: Set environment variables
+        run: |
+          echo "DATABASE_URL=postgresql://hoortrade:hoortrade@localhost:5432/test_db" >> $GITHUB_ENV
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: pytest
