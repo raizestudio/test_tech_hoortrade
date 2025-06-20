@@ -8,5 +8,5 @@ class RootView(APIView):
     """
     def get(self, request, *args, **kwargs):
         return Response(
-            {"detail": "Houston, we've had no problem.", "version": settings.API_VERSION}, status=200
+            {"detail": "Houston, we've had no problem.", "api_version": settings.API_VERSION}, status=200
         )
