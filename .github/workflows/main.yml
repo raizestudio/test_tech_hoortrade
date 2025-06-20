@@ -56,4 +56,4 @@ jobs:
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
 
       - name: Run tests
-        run: pytest
+        run: uv run pytest
