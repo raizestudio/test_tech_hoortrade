@@ -7,7 +7,8 @@ WORKDIR /app
 # Install build dependencies
 RUN apk add --no-cache \
     python3 python3-dev py3-pip build-base \
-    libffi-dev openssl-dev cargo gcc musl-dev postgresql-dev
+    libffi-dev openssl-dev cargo gcc musl-dev postgresql-dev \
+    postgresql-client
 
 # Install uv
 RUN pip install uv
@@ -25,7 +26,7 @@ COPY . .
 EXPOSE 8000
 
 # Install
-# RUN python3 manage.py install
+# RUN uv run python manage.py migrate
 
 # Start Django using uv
 CMD ["uv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
