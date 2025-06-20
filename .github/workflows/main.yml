@@ -54,6 +54,9 @@ jobs:
         run: |
           echo "DATABASE_URL=postgresql://hoortrade:hoortrade@localhost:5432/test_db" >> $GITHUB_ENV
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+      
+      - name: Run init script
+        run: bash ./init.sh
 
       - name: Run tests
         run: uv run pytest
