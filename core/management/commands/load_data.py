@@ -24,7 +24,9 @@ class Command(BaseCommand):
         app_label = fixture.split("/")[0]
         model_name = fixture.split("/")[-1].split(".")[0]
 
-        self.stdout.write(f"Loaded model {model_name} for app {app_label} in {elapsed_time} seconds")
+        self.stdout.write(
+            f"Loaded model {result.count} entities for model {model_name} in app {app_label} and took {elapsed_time} seconds"  # noqa: E501
+        )
 
     def load_fixture(self, fixture):
         from io import StringIO

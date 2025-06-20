@@ -20,7 +20,6 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = Author
         fields = ("id", "username", "email", "first_name", "last_name", "movies")
 
-    
 
 class SpectatorSerializer(serializers.ModelSerializer):
     class Meta:

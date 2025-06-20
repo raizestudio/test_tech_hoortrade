@@ -1,5 +1,7 @@
 from django.contrib import admin
+
 from users.models import Author
+
 
 class HasMoviesFilter(admin.SimpleListFilter):
     title = "Has Movies"
@@ -17,4 +19,3 @@ class HasMoviesFilter(admin.SimpleListFilter):
         elif self.value() == "no":
             return queryset.exclude(pk__in=Author.objects.get_authors_with_atleast_one_movie())
         return queryset
-

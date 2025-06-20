@@ -33,6 +33,7 @@ class RegisterSerializer(serializers.Serializer):
         user.save()
         return user
 
+
 class BaseUserTokenSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)

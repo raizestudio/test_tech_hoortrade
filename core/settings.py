@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     "rest_framework_simplejwt",
+    "drf_spectacular",
     "core",
     "accounts",
     "users",
@@ -138,8 +139,9 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.OrderingFilter",
     ],
-    # "DEFAULT_PAGINATION_CLASS": "core.pagination.DefaultPagination",
-    "PAGE_SIZE": 100,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PAGINATION_CLASS": "core.pagination.DefaultPagination",
+    "PAGE_SIZE": 20,
 }
 
 # Cache

@@ -1,22 +1,21 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.utils.html import format_html_join
 from django.urls import reverse
+from django.utils.html import format_html_join
 
-from users.models import AdminUser, Author, Spectator
 from users.filters import HasMoviesFilter
-from movies.models import Movie
-
+from users.models import AdminUser, Author, Spectator
 
 admin.site.register(AdminUser)
 
+
 @admin.register(Author)
 class AuthorAdmin(UserAdmin):
-    list_display = ('email', 'username', 'first_name', 'last_name')
-    search_fields = ('email', 'username')
-    ordering = ('email',)
+    list_display = ("email", "username", "first_name", "last_name")
+    search_fields = ("email", "username")
+    ordering = ("email",)
     list_filter = UserAdmin.list_filter + (HasMoviesFilter,)
-    
+
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name", "bio")}),
@@ -29,7 +28,7 @@ class AuthorAdmin(UserAdmin):
         movies = obj.movies.all()
         if not movies.exists():
             return "-"
-    
+
         links = format_html_join(
             ", ",
             '<a href="{}">{}</a>',
@@ -39,10 +38,11 @@ class AuthorAdmin(UserAdmin):
                     movie.title,
                 )
                 for movie in movies
-            )
+            ),
         )
         return links
 
-    movies_list.short_description = "Movies"   
+    movies_list.short_description = "Movies"
+
 
 admin.site.register(Spectator)

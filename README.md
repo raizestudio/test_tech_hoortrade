@@ -59,13 +59,13 @@ source .venv/bin/activate
 mkdir -p logs && mkdir -p media
 
 # Effectuer migrations
-uv run python manage.py migrate
+uv run manage.py migrate
 
 # Charger fixtures
-uv run python manage.py load_fixtures
+uv run manage.py load_fixtures
 
 # Démarrer serveur
-uv run python manage.py runserver
+uv run manage.py runserver
 ```
 
 ## Utilisation

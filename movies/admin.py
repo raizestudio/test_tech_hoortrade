@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html_join
 
-from movies.models import Genre, Movie, MovieReview, AuthorReview
+from movies.models import AuthorReview, Genre, Movie, MovieReview
 
 admin.site.register(Genre)
 admin.site.register(MovieReview)
 admin.site.register(AuthorReview)
+
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):

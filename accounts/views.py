@@ -1,6 +1,6 @@
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
-from users.models import Author, Spectator
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from accounts.serializers import BaseUserTokenSerializer, RegisterSerializer
 
 

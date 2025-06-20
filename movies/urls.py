@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import GenreViewSet, MovieViewSet, MovieReviewViewSet, AuthorReviewViewSet
+from .views import AuthorReviewViewSet, GenreViewSet, MovieReviewViewSet, MovieViewSet
 
 router = DefaultRouter()
 router.register(r"movies", MovieViewSet, basename="movie")

@@ -46,16 +46,17 @@ class BaseUser(PolymorphicModel, AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.email} ({self.__class__.__name__})"
 
+
 class AuthorManager(CustomUserManager):
     def get_authors_with_atleast_one_movie(self):
-        return self.filter(
-            movies__isnull=False
-        ).distinct()
+        return self.filter(movies__isnull=False).distinct()
+
 
 class Author(BaseUser):
     bio = models.TextField(blank=True)
-    
+
     objects = AuthorManager()
+
 
 class Spectator(BaseUser):
     preferred_language = models.CharField(max_length=30, default="en")
