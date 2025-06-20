@@ -18,10 +18,11 @@ class AdminUserSerializer(serializers.ModelSerializer):
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = ("id",)
+        fields = ("id", "username", "email", "first_name", "last_name", "movies")
 
+    
 
 class SpectatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Spectator
-        fields = ("id",)
+        fields = ("id", "username", "email", "first_name", "last_name", "favorite_movies")

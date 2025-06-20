@@ -1,7 +1,7 @@
-from os import wait
-from django.core.management.base import BaseCommand
 from django.core.management import CommandError
+from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
+
 from users.models import Author, Spectator
 
 
@@ -16,7 +16,6 @@ class Command(BaseCommand):
             "--spectator", action="store_true", help="Create a spectator user instead of an author."
         )
 
-
     @atomic
     def handle(self, *args, **options):
         email = options["email"]
@@ -26,7 +25,7 @@ class Command(BaseCommand):
 
         if not email or not username or not password:
             raise CommandError("Email, username, and password are required.")
-        
+
         if is_spectator:
             user = Spectator.objects.create_user(
                 email=email,

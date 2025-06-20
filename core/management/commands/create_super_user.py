@@ -1,7 +1,8 @@
-from users.models import AdminUser
 from django.core.management import CommandError
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
+
+from users.models import AdminUser
 
 
 class Command(BaseCommand):
