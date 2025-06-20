@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from movies.models import Genre, Movie, MovieReview, AuthorReview
-
+from users.serializers import AuthorSerializer
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,6 +39,9 @@ class AuthorReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at"]
 
 class MovieSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(read_only=True, many=True)
+    authors = AuthorSerializer(read_only=True, many=True)
+
     class Meta:
         model = Movie
         fields = [
@@ -50,7 +53,7 @@ class MovieSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
             "updated_at",
-            "genre",
-            "author",
+            "genres",
+            "authors",
         ]
         read_only_fields = ["id", "created_at", "updated_at"]

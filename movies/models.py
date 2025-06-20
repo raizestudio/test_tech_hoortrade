@@ -72,8 +72,8 @@ class Movie(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name="movies")
-    author = models.ManyToManyField("users.Author", related_name="movies")
+    genres = models.ManyToManyField(Genre, related_name="movies")
+    authors = models.ManyToManyField("users.Author", related_name="movies")
 
     def __str__(self):
         return self.title

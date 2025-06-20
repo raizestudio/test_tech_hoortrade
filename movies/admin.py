@@ -15,10 +15,10 @@ class MovieAdmin(admin.ModelAdmin):
         "release_date",
         "rating",
         "status",
-        "genre",
+        # "genres",
     )
     search_fields = ("title", "description")
-    list_filter = ("status", "genre", "release_date")
+    list_filter = ("status", "release_date")
     ordering = ("-release_date",)
 
     fieldsets = (
