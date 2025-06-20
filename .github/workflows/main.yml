@@ -40,7 +40,7 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Install dependencies with uv
-        run: uv pip install
+        run: uv sync
       
       
       - name: Wait for PostgreSQL to be ready
