@@ -34,27 +34,28 @@ set +a
 # Check if TMDB_API_KEY is set
 if [ -z "$TMDB_API_KEY" ]; then
   echo "TMDB_API_KEY is not set in the .env file."
-  read -p "Do you want to enter it now? [Y/n]: " answer
-  answer=${answer:-Y}
 
-  if [[ "$answer" =~ ^[Yy]$ ]]; then
-    read -p "Enter TMDB_API_KEY: " tmdb_key
+  if [ -t 0 ]; then  # Check for interactive shell
+    read -p "Do you want to enter it now? [Y/n]: " answer
+    answer=${answer:-Y}
 
-    # Escape special characters before writing to .env
-    tmdb_key_escaped=$(printf '%q' "$tmdb_key")
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+      read -p "Enter TMDB_API_KEY: " tmdb_key
 
-    # Remove old key if exists
-    sed -i.bak '/^TMDB_API_KEY=/d' .env
+      tmdb_key_escaped=$(printf '%q' "$tmdb_key")
+      sed -i.bak '/^TMDB_API_KEY=/d' .env
+      echo "TMDB_API_KEY=\"$tmdb_key_escaped\"" >> .env
 
-    # Write new key
-    echo "TMDB_API_KEY=\"$tmdb_key_escaped\"" >> .env
-
-    # Reload
-    set -a
-    source .env
-    set +a
+      # Reload env vars
+      set -a
+      source .env
+      set +a
+    else
+      echo "Continuing without TMDB_API_KEY (third-party API may not work properly)."
+    fi
   else
-    echo "Continuing without TMDB_API_KEY (third-party API may not work properly)."
+    echo "Non-interactive shell detected; skipping prompt for TMDB_API_KEY."
+    echo "You can manually set it in the .env file if needed."
   fi
 fi
 
