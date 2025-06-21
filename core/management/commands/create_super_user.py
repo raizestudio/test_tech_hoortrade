@@ -14,6 +14,8 @@ class Command(BaseCommand):
         parser.add_argument("email", type=str, help="Email for the superuser")
         parser.add_argument("username", type=str, help="Username for the superuser")
         parser.add_argument("password", type=str, help="Password for the superuser")
+        parser.add_argument("--first_name", type=str, default="", help="First name of the superuser")
+        parser.add_argument("--last_name", type=str, default="", help="Last name of the superuser")
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.NOTICE("Creating superuser..."))
@@ -33,6 +35,8 @@ class Command(BaseCommand):
                     username=options["username"],
                     email=options["email"],
                     password=options["password"],
+                    first_name=options.get("first_name", ""),
+                    last_name=options.get("last_name", ""),
                 )
                 _user.is_superuser = True
                 _user.is_staff = True

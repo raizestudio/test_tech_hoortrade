@@ -34,6 +34,8 @@ class MovieRating(Enum):
 
 
 class Genre(models.Model):
+    """Model representing a genre of a movie."""
+
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
@@ -48,6 +50,13 @@ class Review(PolymorphicModel):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # A review must be a subclass of Review
+        if self.__class__ is Review:
+            raise ValueError("Review must be a subclass of Review")
+
+        super().save(*args, **kwargs)
 
 
 class MovieReview(Review):
@@ -78,10 +87,30 @@ class AuthorReview(Review):
         return f"Review for {self.author.username}"
 
 
-# class MovieManager(models.Manager): ...
+class MovieQuerySet(models.QuerySet):
+    """Queryset for Movie model"""
+
+    def with_related(self):
+        return self.select_related().prefetch_related(
+            "genres",
+            "authors",
+            "reviews",
+        )
+
+
+class MovieManager(models.Manager):
+    """Manager for movie model"""
+
+    def get_queryset(self):
+        return MovieQuerySet(self.model, using=self._db)
+
+    def with_related(self):
+        return self.get_queryset().with_related()
 
 
 class Movie(models.Model):
+    """Model representing a movie."""
+
     title = models.CharField(max_length=100)
     original_title = models.CharField(max_length=100, null=True, blank=True)
     original_language = models.CharField(max_length=10, null=True, blank=True)
@@ -97,6 +126,8 @@ class Movie(models.Model):
 
     genres = models.ManyToManyField(Genre, related_name="movies")
     authors = models.ManyToManyField("users.Author", related_name="movies")
+
+    objects = MovieManager()
 
     class Meta:
         unique_together = ("title", "original_title", "release_date")

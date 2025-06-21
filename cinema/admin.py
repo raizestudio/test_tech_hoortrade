@@ -6,6 +6,28 @@ from cinema.filters import AverageRatingFilter
 from cinema.models import AuthorReview, FavoriteMovie, Genre, Movie, MovieReview
 from core.models import DataSource
 
+
+class AuthorInline(admin.TabularInline):
+    model = Movie.authors.through
+    extra = 1
+    verbose_name = "Author"
+    verbose_name_plural = "Authors"
+
+
+class GenreInline(admin.TabularInline):
+    model = Movie.genres.through
+    extra = 1
+    verbose_name = "Genre"
+    verbose_name_plural = "Genres"
+
+
+class MovieReviewInline(admin.StackedInline):
+    model = MovieReview
+    extra = 1
+    verbose_name = "Movie Review"
+    verbose_name_plural = "Movie Reviews"
+
+
 admin.site.register(Genre)
 admin.site.register(MovieReview)
 admin.site.register(AuthorReview)
@@ -14,6 +36,9 @@ admin.site.register(FavoriteMovie)
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
+    """Admin interface for managing movies."""
+
+    inlines = [AuthorInline, GenreInline, MovieReviewInline]
     list_display = (
         "title",
         "original_title",
@@ -30,8 +55,7 @@ class MovieAdmin(admin.ModelAdmin):
     ordering = ("-release_date",)
 
     fieldsets = (
-        (None, {"fields": ("title", "description", "release_date", "status", "reviews_list")}),
-        ("Genre and Author", {"fields": ("genres_list", "authors_list")}),
+        (None, {"fields": ("title", "description", "release_date", "status")}),
         ("Additional Information", {"fields": ("source",)}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )

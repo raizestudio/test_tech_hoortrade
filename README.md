@@ -86,7 +86,7 @@ uv run manage.py migrate
 
 # Créer utilisateur administrateur et/ou autres utlisateurs
 uv run manage.py create_super_user email username password
-uv run manage.py create_user email username password --spectator
+uv run manage.py create_user email username password first_name last_name --date_of_birth --spectator
 
 # Charger fixtures
 uv run manage.py load_fixtures

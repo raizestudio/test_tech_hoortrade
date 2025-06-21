@@ -48,7 +48,7 @@ class MovieReviewViewSet(ModelViewSet):
 class MovieViewSet(ModelViewSet):
     """A viewset for viewing and editing movie instances."""
 
-    queryset = Movie.objects.prefetch_related("genres", "authors").prefetch_related("reviews").all()
+    queryset = Movie.objects.with_related().all()
     serializer_class = MovieSerializer
     filterset_fields = ["title", "status", "source"]
     permission_classes = [IsAuthenticatedOrReadOnly]

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from cinema.models import AuthorReview, Genre, Movie, MovieReview
-from users.serializers import AuthorSerializer, SpectatorSerializer
+from users.serializers import SpectatorSerializer
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -28,7 +28,6 @@ class AuthorReviewSerializer(serializers.ModelSerializer):
 
 class MovieSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(read_only=True, many=True)
-    authors = AuthorSerializer(read_only=True, many=True)
 
     class Meta:
         model = Movie
@@ -50,6 +49,12 @@ class MovieSerializer(serializers.ModelSerializer):
             "average_rating",
         ]
         read_only_fields = ["id", "created_at", "updated_at", "average_rating"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from users.serializers import AuthorSerializer
+
+        self.fields["authors"] = AuthorSerializer(many=True, read_only=True)
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)

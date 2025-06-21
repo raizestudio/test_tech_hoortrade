@@ -9,19 +9,33 @@ class BaseUserSerializer(serializers.ModelSerializer):
         fields = ("id", "username", "email", "is_active", "is_staff", "is_superuser")
 
 
-class AdminUserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
+        # This will be subclassed, so we don't bind a model here
+        model = None
+        fields = ("id", "username", "email", "first_name", "last_name", "date_of_birth", "is_active")
+
+
+class AdminUserSerializer(UserProfileSerializer):
+    class Meta(UserProfileSerializer.Meta):
         model = AdminUser
-        fields = ("id", "username", "email", "is_active", "is_staff", "is_superuser")
+        fields = UserProfileSerializer.Meta.fields + ("is_staff", "is_superuser")
 
 
-class AuthorSerializer(serializers.ModelSerializer):
-    class Meta:
+class AuthorSerializer(UserProfileSerializer):
+    class Meta(UserProfileSerializer.Meta):
         model = Author
-        fields = ("id", "username", "email", "first_name", "last_name", "movies")
+        fields = UserProfileSerializer.Meta.fields + ("movies",)
 
 
-class SpectatorSerializer(serializers.ModelSerializer):
-    class Meta:
+class SpectatorSerializer(UserProfileSerializer):
+
+    class Meta(UserProfileSerializer.Meta):
         model = Spectator
-        fields = ("id", "username", "email", "first_name", "last_name", "favorite_movies")
+        fields = UserProfileSerializer.Meta.fields + ("favorite_movies",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from cinema.serializers import MovieSerializer
+
+        self.fields["favorite_movies"] = MovieSerializer(many=True, read_only=True)
