@@ -31,13 +31,31 @@ cd test_tech_hoortrade
 
 # Possible de relancer avec la commande
 ./init.sh --docker-reset
+
+# Dans les deux cas un fichier .env est crée (s'il n'existe pas) à partir du .env.example
+# Vous serez invité à entrer votre clé API TMDB
 ```
 
 ### Sans Docker, automatisé
 
 ```bash
+# Installer uv si nécessaire
+curl -Ls https://astral.sh/uv/install.sh | sh
+
+# ou avec pip
+pip install uv
+
+# Installer dépendances
+uv sync
+
+# Activer venv
+source .venv/bin/activate
+
 # Executer script init.sh
 ./init.sh
+
+# Un fichier .env est crée (s'il n'existe pas) à partir du .env.examplei
+# Vous serez invité à entrer votre clé API TMDB
 ```
 
 ### Sans Docker, manuellement
@@ -55,14 +73,24 @@ uv sync
 # Activer venv
 source .venv/bin/activate
 
+# Créer une copie de .env.example
+mv .env.example .env
+
 # Créer dossiers nécessaires
 mkdir -p logs && mkdir -p media
 
 # Effectuer migrations
 uv run manage.py migrate
 
+# Créer utilisateur administrateur et/ou autres utlisateurs
+uv run manage.py create_super_user email username password
+uv run manage.py create_user email username password --spectator
+
 # Charger fixtures
 uv run manage.py load_fixtures
+
+# Génerer films afin de populer la bd
+uv run manage.py generate_fake_movies count
 
 # Démarrer serveur
 uv run manage.py runserver

@@ -17,7 +17,7 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL=psql://hoortrade:hoortrade@db:5432/hoortrade
+      # - DATABASE_URL=psql://hoortrade:hoortrade@db:5432/hoortrade
     command: >
       sh -c "
         echo 'Waiting for PostgreSQL...';
