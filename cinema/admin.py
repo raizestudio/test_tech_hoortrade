@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html_join
 
+from cinema.filters import AverageRatingFilter
 from cinema.models import AuthorReview, Genre, Movie, MovieReview
+from core.models import DataSource
 
 admin.site.register(Genre)
 admin.site.register(MovieReview)
@@ -13,21 +15,48 @@ admin.site.register(AuthorReview)
 class MovieAdmin(admin.ModelAdmin):
     list_display = (
         "title",
+        "original_title",
+        "original_language",
         "release_date",
-        "rating",
         "status",
-        # "genres",
+        "average_rating",
+        "source",
+        "created_at",
+        "updated_at",
     )
-    search_fields = ("title", "description")
-    list_filter = ("status", "release_date")
+    search_fields = ("title", "original_title")
+    list_filter = ("status", "release_date", "source", AverageRatingFilter)
     ordering = ("-release_date",)
 
     fieldsets = (
-        (None, {"fields": ("title", "description", "release_date", "rating", "status", "reviews_list")}),
-        ("Genre and Author", {"fields": ("genre", "authors_list")}),
+        (None, {"fields": ("title", "description", "release_date", "status", "reviews_list")}),
+        ("Genre and Author", {"fields": ("genres_list", "authors_list")}),
+        ("Additional Information", {"fields": ("source",)}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
-    readonly_fields = ("created_at", "updated_at", "authors_list", "reviews_list")
+    readonly_fields = ("created_at", "updated_at", "genres_list", "authors_list", "reviews_list")
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.source = DataSource.ADMIN.name
+        super().save_model(request, obj, form, change)
+
+    def genres_list(self, obj):
+        genres = obj.genres.all()
+        if not genres.exists():
+            return "-"
+        links = format_html_join(
+            ", ",
+            '<a href="{}">{}</a>',
+            (
+                (
+                    reverse("admin:cinema_genre_change", args=[genre.pk]),
+                    genre.name,
+                )
+                for genre in genres
+            ),
+        )
+        return links
 
     def authors_list(self, obj):
         authors = obj.author.all()
@@ -56,7 +85,7 @@ class MovieAdmin(admin.ModelAdmin):
             '<a href="{}">{}</a>',
             (
                 (
-                    reverse("admin:movies_moviereview_change", args=[review.pk]),
+                    reverse("admin:cinema_moviereview_change", args=[review.pk]),
                     review.created_by,
                 )
                 for review in reviews

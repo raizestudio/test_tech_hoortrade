@@ -3,6 +3,8 @@ from enum import Enum
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
+from core.models import DataSource
+
 
 class MovieStatus(Enum):
     DRAFT = "draft"
@@ -68,10 +70,14 @@ class AuthorReview(Review):
 
 class Movie(models.Model):
     title = models.CharField(max_length=100)
+    original_title = models.CharField(max_length=100, null=True, blank=True)
+    original_language = models.CharField(max_length=10, null=True, blank=True)
     description = models.TextField()
     release_date = models.DateField()
-    rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
     status = models.CharField(max_length=20, choices=MovieStatus.choices(), default=MovieStatus.DRAFT.name)
+    adult_content = models.BooleanField(default=False)
+    poster = models.ImageField(upload_to="posters/", null=True, blank=True)
+    source = models.CharField(max_length=50, choices=DataSource.choices(), default=DataSource.API.name)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -79,5 +85,16 @@ class Movie(models.Model):
     genres = models.ManyToManyField(Genre, related_name="movies")
     authors = models.ManyToManyField("users.Author", related_name="movies")
 
+    class Meta:
+        unique_together = ("title", "original_title", "release_date")
+
     def __str__(self):
         return self.title
+
+    @property
+    def average_rating(self):
+        reviews = self.reviews.all()
+        if not reviews:
+            return None
+        total_rating = sum(review.rating for review in reviews)
+        return total_rating / len(reviews)

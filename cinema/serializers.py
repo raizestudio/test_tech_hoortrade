@@ -50,13 +50,27 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+            "original_title",
+            "original_language",
             "description",
             "release_date",
-            "rating",
             "status",
             "created_at",
             "updated_at",
             "genres",
             "authors",
+            "adult_content",
+            "poster",
+            "source",
+            "average_rating",
         ]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_at", "updated_at", "average_rating"]
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+
+        user = self.context.get("request").user
+        if not user.is_authenticated or not getattr(user, "is_admin", False):
+            rep.pop("source", None)
+
+        return rep

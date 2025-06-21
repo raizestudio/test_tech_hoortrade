@@ -46,6 +46,18 @@ class BaseUser(PolymorphicModel, AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.email} ({self.__class__.__name__})"
 
+    @property
+    def is_admin(self):
+        return isinstance(self, AdminUser)
+
+    @property
+    def is_author(self):
+        return isinstance(self, Author)
+
+    @property
+    def is_spectator(self):
+        return isinstance(self, Spectator)
+
 
 class AuthorManager(CustomUserManager):
     def get_authors_with_atleast_one_movie(self):

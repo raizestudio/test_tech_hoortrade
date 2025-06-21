@@ -151,6 +151,8 @@ CACHE_DB = env("CACHE_DB", default="")
 CACHE_TTL = env("CACHE_TTL", default=60)
 # CACHE_PASSWORD = env("CACHE_PASSWORD", default="")
 
+# TMDB API
+TMDB_API_KEY = env("TMDB_API_KEY", default="")
 
 # Logging
 LOG_DIR = BASE_DIR / "logs"
