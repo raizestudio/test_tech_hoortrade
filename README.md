@@ -8,12 +8,14 @@ Application Django permettant la gestion d'une librairie de films.
 
 - [Installation](#installation)
 - [Utilisation](#utilisation)
+- [Exigences Techniques)(#exigences techniques)
+- [Contribuer](#contribuer)
 - [License](#license)
 - [Contact](#contact)
 
 ## Installation
 
-Instructions d'installation
+Instructions d'installation.
 
 ```bash
 # Cloner le repo
@@ -100,8 +102,28 @@ uv run manage.py runserver
 
 Instructions sur l'utilisation de l'application
 
+### Endpoints
+
+Il est possible de visualiser les points de terminaisons disponibles de plusieurs façons.
+
+> 1. En exportant le schema au format yaml -> api/schema/
+> 2. Avec Swagger -> api/schema/swagger-ui/
+> 3. Avec Redoc -> api/schema/redoc/
+
+## Exigences Techniques
+
+[comment]: <> (TODO)
+
+## Contribuer
+
+[comment]: <> (TODO)
+
 ## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
+Joel P. - [raizetvision@gmail.com](mailto:joel.pinho16@icloud.com)
 
+Project Link: [https://github.com/raizestudio/test_tech_hoortrade](https://github.com/raizestudio/test_tech_hoortrade)
