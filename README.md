@@ -8,7 +8,7 @@ Application Django permettant la gestion d'une librairie de films.
 
 - [Installation](#installation)
 - [Utilisation](#utilisation)
-- [Exigences Techniques](#exigences-techniques)
+- [Exigences](#exigences)
 - [Contribuer](#contribuer)
 - [License](#license)
 - [Contact](#contact)
@@ -102,6 +102,49 @@ uv run manage.py runserver
 
 Instructions sur l'utilisation de l'application
 
+### Commandes Django
+
+Plusieurs commandes sont disponibles
+
+```bash
+# Si Docker executer la commande
+docker exec -it test_tech_hoortrade sh
+source .venv/bin/activate
+```
+#### Fixtures
+
+```bash
+# Charger toutes les fixtures disponibles
+uv run manage.py load_fixtures
+
+# Ou individuellement, c'est just un wrapper autour de loaddata
+uv run manage.py load_data fixture
+```
+
+#### Création d'utilisateurs
+
+```bash
+# Créer utilisateur administrateur
+uv run manage.py create_super_user email username password
+
+# Créer utilisateur auteur/specateur
+uv run manage.py create_user email username password first_name last_name --date_of_birth --spectator
+```
+
+#### Création de films
+
+```bash
+# Il est possible de génerer des films aléatoirement
+uv run manage.py generate_fake_movies count
+```
+#### Chercher et charger depuis TMDB
+
+```bash
+# Il est possible de rechercher et charger des films depuis TMDB
+uv run manage.py search_tmdb query --page --include-adult
+```
+
+
 ### Endpoints
 
 Il est possible de visualiser les points de terminaisons disponibles de plusieurs façons.
@@ -110,7 +153,7 @@ Il est possible de visualiser les points de terminaisons disponibles de plusieur
 > 2. Avec Swagger -> api/schema/swagger-ui/
 > 3. Avec Redoc -> api/schema/redoc/
 
-## Exigences Techniques
+## Exigences
 
 [comment]: <> (TODO)
 

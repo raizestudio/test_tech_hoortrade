@@ -26,7 +26,7 @@ admin.site.register(AdminUser)
 
 @admin.register(Author)
 class AuthorAdmin(UserAdmin):
-    list_display = ("email", "username", "first_name", "last_name")
+    list_display = ("id", "email", "username", "first_name", "last_name")
     search_fields = ("email", "username")
     ordering = ("email",)
     list_filter = UserAdmin.list_filter + (HasMoviesFilter,)

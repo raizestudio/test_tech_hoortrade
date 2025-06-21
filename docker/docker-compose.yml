@@ -24,7 +24,7 @@ services:
         while ! pg_isready -h db -U hoortrade; do sleep 1; done;
         echo 'Running migrations...';
         uv run manage.py migrate &&
-        uv run manage.py create_super_user r@r.io root root &&
+        uv run manage.py create_super_user r@r.io root root &
         uv run manage.py load_fixtures &&
         uv run manage.py runserver 0.0.0.0:8000
       "

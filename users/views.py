@@ -24,6 +24,7 @@ class BaseUserViewSet(ModelViewSet):
     serializer_class = BaseUserSerializer
     filterset_fields = ["username", "email", "is_active", "is_staff", "is_superuser"]
     pagination_class = DefaultPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AdminUserViewSet(ModelViewSet):
@@ -35,6 +36,7 @@ class AdminUserViewSet(ModelViewSet):
     serializer_class = AdminUserSerializer
     filterset_fields = ["username", "email"]
     pagination_class = DefaultPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AuthorViewSet(ModelViewSet):
@@ -97,6 +99,7 @@ class SpectatorViewSet(ModelViewSet):
     serializer_class = SpectatorSerializer
     filterset_fields = ["username", "email"]
     pagination_class = DefaultPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @action(detail=True, methods=["get"], url_path="favorite-movies")
     def favorite_movies(self, request, pk=None):

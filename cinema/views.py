@@ -22,6 +22,7 @@ class GenreViewSet(ModelViewSet):
 
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AuthorReviewViewSet(ModelViewSet):
@@ -29,6 +30,7 @@ class AuthorReviewViewSet(ModelViewSet):
 
     queryset = AuthorReview.objects.all()
     serializer_class = AuthorReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class MovieReviewViewSet(ModelViewSet):
@@ -43,6 +45,7 @@ class MovieReviewViewSet(ModelViewSet):
         "review_ptr__polymorphic_ctype",
     ).prefetch_related("movie__genres", "movie__authors", "created_by__favorite_movies")
     serializer_class = MovieReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class MovieViewSet(ModelViewSet):

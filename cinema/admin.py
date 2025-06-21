@@ -21,13 +21,6 @@ class GenreInline(admin.TabularInline):
     verbose_name_plural = "Genres"
 
 
-class MovieReviewInline(admin.StackedInline):
-    model = MovieReview
-    extra = 1
-    verbose_name = "Movie Review"
-    verbose_name_plural = "Movie Reviews"
-
-
 admin.site.register(Genre)
 admin.site.register(MovieReview)
 admin.site.register(AuthorReview)
@@ -38,7 +31,7 @@ admin.site.register(FavoriteMovie)
 class MovieAdmin(admin.ModelAdmin):
     """Admin interface for managing movies."""
 
-    inlines = [AuthorInline, GenreInline, MovieReviewInline]
+    inlines = [AuthorInline, GenreInline]
     list_display = (
         "title",
         "original_title",
@@ -57,6 +50,7 @@ class MovieAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {"fields": ("title", "description", "release_date", "status")}),
         ("Additional Information", {"fields": ("source",)}),
+        ("Reviews", {"fields": ("reviews_list",)}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
     readonly_fields = ("created_at", "updated_at", "genres_list", "authors_list", "reviews_list")
