@@ -3,7 +3,7 @@ name = "tech_test_hoortrade"
 version = "0.1.0"
 description = "A Python package for Hoortrade technical test"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "black>=25.1.0",
     "colorama>=0.4.6",

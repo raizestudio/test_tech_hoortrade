@@ -98,3 +98,15 @@ class Movie(models.Model):
             return None
         total_rating = sum(review.rating for review in reviews)
         return total_rating / len(reviews)
+
+
+class FavoriteMovie(models.Model):
+    spectator = models.ForeignKey("users.Spectator", on_delete=models.CASCADE)
+    movie = models.ForeignKey("cinema.Movie", on_delete=models.CASCADE)
+    # added_at = models.DateTimeField(auto_now_add=True)  # optional
+
+    class Meta:
+        unique_together = ("spectator", "movie")
+
+    def __str__(self):
+        return f"{self.spectator} → {self.movie}"

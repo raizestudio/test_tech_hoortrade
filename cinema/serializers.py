@@ -70,7 +70,7 @@ class MovieSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
 
         user = self.context.get("request").user
-        if not user.is_authenticated or not getattr(user, "is_admin", False):
+        if not user.is_authenticated or not getattr(user, "is_admin_user", False):
             rep.pop("source", None)
 
         return rep

@@ -46,16 +46,22 @@ class BaseUser(PolymorphicModel, AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.email} ({self.__class__.__name__})"
 
+    def save(self, *args, **kwargs):
+        # A user must be a subclass of BaseUser
+        if self.__class__ == BaseUser:
+            raise TypeError("You cannot create an instance of BaseUser directly. Use a subclass instead.")
+        super().save(*args, **kwargs)
+
     @property
-    def is_admin(self):
+    def is_admin_user(self):
         return isinstance(self, AdminUser)
 
     @property
-    def is_author(self):
+    def is_author_user(self):
         return isinstance(self, Author)
 
     @property
-    def is_spectator(self):
+    def is_spectator_user(self):
         return isinstance(self, Spectator)
 
 
@@ -73,7 +79,12 @@ class Author(BaseUser):
 class Spectator(BaseUser):
     preferred_language = models.CharField(max_length=30, default="en")
 
-    favorite_movies = models.ManyToManyField("cinema.Movie", blank=True, related_name="favorite_spectators")
+    favorite_movies = models.ManyToManyField(
+        "cinema.Movie",
+        blank=True,
+        related_name="favorite_spectators",
+        through="cinema.FavoriteMovie",
+    )
 
 
 class AdminUser(BaseUser):

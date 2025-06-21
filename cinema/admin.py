@@ -3,12 +3,13 @@ from django.urls import reverse
 from django.utils.html import format_html_join
 
 from cinema.filters import AverageRatingFilter
-from cinema.models import AuthorReview, Genre, Movie, MovieReview
+from cinema.models import AuthorReview, FavoriteMovie, Genre, Movie, MovieReview
 from core.models import DataSource
 
 admin.site.register(Genre)
 admin.site.register(MovieReview)
 admin.site.register(AuthorReview)
+admin.site.register(FavoriteMovie)
 
 
 @admin.register(Movie)
