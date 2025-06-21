@@ -1,0 +1,136 @@
+[
+  {
+    "model": "cinema.genre",
+    "pk": 1,
+    "fields": {
+      "name": "Action"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 2,
+    "fields": {
+      "name": "Adventure"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 3,
+    "fields": {
+      "name": "Animation"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 4,
+    "fields": {
+      "name": "Comedy"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 5,
+    "fields": {
+      "name": "Crime"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 6,
+    "fields": {
+      "name": "Documentary"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 7,
+    "fields": {
+      "name": "Drama"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 8,
+    "fields": {
+      "name": "Family"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 9,
+    "fields": {
+      "name": "Fantasy"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 10,
+    "fields": {
+      "name": "History"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 11,
+    "fields": {
+      "name": "Horror"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 12,
+    "fields": {
+      "name": "Music"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 13,
+    "fields": {
+      "name": "Mystery"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 14,
+    "fields": {
+      "name": "Romance"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 15,
+    "fields": {
+      "name": "Science Fiction"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 16,
+    "fields": {
+      "name": "TV Movie"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 17,
+    "fields": {
+      "name": "Thriller"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 18,
+    "fields": {
+      "name": "War"
+    }
+  },
+  {
+    "model": "cinema.genre",
+    "pk": 19,
+    "fields": {
+      "name": "Western"
+    }
+  }
+]
+

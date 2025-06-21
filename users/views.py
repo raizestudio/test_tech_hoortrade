@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from cinema.serializers import MovieSerializer
 from core.pagination import DefaultPagination
-from movies.serializers import MovieSerializer
 from users.models import AdminUser, Author, BaseUser, Spectator
 from users.serializers import (
     AdminUserSerializer,

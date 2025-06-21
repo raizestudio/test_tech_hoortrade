@@ -1,14 +1,14 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
-from core.pagination import DefaultPagination
-from movies.models import AuthorReview, Genre, Movie, MovieReview
-from movies.serializers import (
+from cinema.models import AuthorReview, Genre, Movie, MovieReview
+from cinema.serializers import (
     AuthorReviewSerializer,
     GenreSerializer,
     MovieReviewSerializer,
     MovieSerializer,
 )
+from core.pagination import DefaultPagination
 
 
 class GenreViewSet(ModelViewSet):

@@ -24,5 +24,5 @@ repos:
       - id: pytest
         name: Run pytest
         entry: pytest
-        language: system  # Uses the system-installed pytest
-        pass_filenames: false  # Avoid passing files explicitly
+        language: system
+        pass_filenames: false 

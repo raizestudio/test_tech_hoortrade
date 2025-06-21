@@ -61,7 +61,7 @@ class Author(BaseUser):
 class Spectator(BaseUser):
     preferred_language = models.CharField(max_length=30, default="en")
 
-    favorite_movies = models.ManyToManyField("movies.Movie", blank=True, related_name="favorite_spectators")
+    favorite_movies = models.ManyToManyField("cinema.Movie", blank=True, related_name="favorite_spectators")
 
 
 class AdminUser(BaseUser):

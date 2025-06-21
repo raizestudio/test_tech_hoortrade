@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from movies.models import AuthorReview, Genre, Movie, MovieReview
+from cinema.models import AuthorReview, Genre, Movie, MovieReview
 from users.serializers import AuthorSerializer
 
 

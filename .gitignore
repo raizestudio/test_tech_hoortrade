@@ -23,7 +23,7 @@ static/
 coverage.xml
 .cov_html/
 htmlcov/
-
+.coverage
 
 # Other
 dev_shell.py

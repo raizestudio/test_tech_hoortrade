@@ -16,7 +16,7 @@ class Command(BaseCommand):
         start_time = time.time()  # Start measuring time
         fixture = options["fixture"]
 
-        result = self.load_fixture(fixture)
+        self.load_fixture(fixture)
 
         end_time = time.time()
         elapsed_time = round(end_time - start_time, 3)
@@ -25,7 +25,7 @@ class Command(BaseCommand):
         model_name = fixture.split("/")[-1].split(".")[0]
 
         self.stdout.write(
-            f"Loaded model {result.count} entities for model {model_name} in app {app_label} and took {elapsed_time} seconds"  # noqa: E501
+            f"Loaded model {model_name} in app {app_label} and took {elapsed_time} seconds"  # noqa: E501
         )
 
     def load_fixture(self, fixture):
@@ -34,8 +34,4 @@ class Command(BaseCommand):
         out = StringIO()
         call_command("loaddata", fixture, stdout=out)
 
-        # Parse the output to count the number of objects loaded
-        output = out.getvalue()
-        count = sum(1 for line in output.splitlines() if line.startswith("Installed"))
-
-        return {"fixture": fixture, "count": count}
+        return None

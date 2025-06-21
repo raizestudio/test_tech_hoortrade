@@ -1,9 +1,0 @@
-[
-  {
-    "model": "movies.genre",
-    "pk": 1,
-    "fields": {
-      "name": "Action"
-    }
-  }
-]
