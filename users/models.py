@@ -7,6 +7,8 @@ from django.db import models
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
+from core.models import DataSource
+
 
 class CustomUserManager(PolymorphicManager, BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -72,6 +74,7 @@ class AuthorManager(CustomUserManager):
 
 class Author(BaseUser):
     bio = models.TextField(blank=True)
+    source = models.CharField(max_length=50, choices=DataSource.choices(), default=DataSource.API.name)
 
     objects = AuthorManager()
 

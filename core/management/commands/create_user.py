@@ -1,5 +1,6 @@
 from django.core.management import CommandError
 from django.core.management.base import BaseCommand
+from django.db import IntegrityError
 from django.db.transaction import atomic
 
 from users.models import Author, Spectator
@@ -27,17 +28,23 @@ class Command(BaseCommand):
             raise CommandError("Email, username, and password are required.")
 
         if is_spectator:
-            user = Spectator.objects.create_user(
-                email=email,
-                username=username,
-                password=password,
-            )
+            try:
+                user = Spectator.objects.create_user(
+                    email=email,
+                    username=username,
+                    password=password,
+                )
+            except IntegrityError:
+                raise CommandError(f"Spectator with username '{username}' or email '{email}' already exists.")
 
         else:
-            user = Author.objects.create_user(
-                email=email,
-                username=username,
-                password=password,
-            )
+            try:
+                user = Author.objects.create_user(
+                    email=email,
+                    username=username,
+                    password=password,
+                )
+            except IntegrityError:
+                raise CommandError(f"Author with username '{username}' or email '{email}' already exists.")
 
         self.stdout.write(self.style.SUCCESS(f"User {user.username} created successfully."))

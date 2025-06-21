@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from cinema.models import AuthorReview, Genre, Movie, MovieReview
+from cinema.models import AuthorReview, Genre, Movie, MovieReview, MovieStatus
 from cinema.serializers import (
     AuthorReviewSerializer,
     GenreSerializer,
@@ -43,9 +43,14 @@ class MovieViewSet(ModelViewSet):
 
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    filterset_fields = ["title", "status"]
+    filterset_fields = ["title", "status", "source"]
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = DefaultPagination
+
+    def get_serializer_class(self):
+        if self.action == "review":
+            return MovieReviewSerializer
+        return super().get_serializer_class()
 
     @extend_schema(
         parameters=[
@@ -69,6 +74,7 @@ class MovieViewSet(ModelViewSet):
     )
     @action(detail=False, methods=["get"], url_path="tmdb-search")
     def tmdb_search(self, request):
+        """Search for movies using the TMDB API."""
         query = request.query_params.get("query")
         page = request.query_params.get("page", 1)
         include_adult = request.query_params.get("include_adult", "false").lower() == "true"
@@ -92,3 +98,70 @@ class MovieViewSet(ModelViewSet):
             )
 
         return Response(response.json(), status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], url_path="favorite-movies")
+    def favorite_movies(self, request):
+        """Get the favorite movies of the authenticated spectator user."""
+        user = request.user
+        # if not user.is_authenticated:
+        # return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not getattr(user, "is_spectator_user", False):
+            return Response(
+                {"detail": "Only spectators can access this endpoint."}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        favorite_movies_qs = user.favorite_movies.all()
+        serializer = self.get_serializer(favorite_movies_qs, many=True, context={"request": request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["get", "post"], url_path="review")
+    def review(self, request, *args, **kwargs):
+        """Allow authenticated specator to review a movie."""
+
+        user = request.user
+        # if not user.is_authenticated:
+        # return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not getattr(user, "is_spectator_user", False):
+            return Response(
+                {"detail": "Only spectators can review movies."}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        movie = self.get_object()
+
+        if request.method == "GET":
+            reviews = movie.reviews.all()
+            serializer = MovieReviewSerializer(reviews, many=True, context={"request": request})
+            return Response(serializer.data)
+
+        elif request.method == "POST":
+            data = request.data.copy()
+            data["movie"] = movie.id
+            data["spectator"] = user.id
+            serializer = MovieReviewSerializer(data=data, context={"request": request})
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=["get"], url_path="archive")
+    def archive(self, request, *args, **kwargs):
+        """Archive a movie."""
+        user = request.user
+        if not request.user.is_authenticated:
+            return Response({"detail": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not getattr(user, "is_admin_user", False):
+            return Response(
+                {"detail": "Only admin users can archive movies."}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        movie = self.get_object()
+        if movie.status == MovieStatus.ARCHIVED:
+            return Response({"detail": "Movie is already archived."}, status=status.HTTP_400_BAD_REQUEST)
+
+        movie.status = MovieStatus.ARCHIVED.name
+        movie.save()
+        return Response({"detail": "Movie archived successfully."}, status=status.HTTP_200_OK)
