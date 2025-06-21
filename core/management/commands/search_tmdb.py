@@ -1,5 +1,8 @@
+import hashlib
+
 import requests
 from django.conf import settings
+from django.core.cache import cache
 from django.core.management.base import BaseCommand
 
 from cinema.models import Movie
@@ -19,19 +22,31 @@ class Command(BaseCommand):
         page = options["page"]
         include_adult = options["include_adult"]
 
-        url = "https://api.themoviedb.org/3/search/movie"
-        headers = {
-            "accept": "application/json",
-            "Authorization": f"Bearer {settings.TMDB_API_KEY}",
-        }
-        params = {"query": query, "page": page, "include_adult": include_adult, "language": "en-US"}
+        # Generate a stable cache key
+        key_raw = f"tmdb:search:{query}:{page}:{include_adult}"
+        cache_key = "tmdb:" + hashlib.sha256(key_raw.encode()).hexdigest()
+        results = cache.get(cache_key)
 
-        response = requests.get(url, headers=headers, params=params)
-        if response.status_code != 200:
-            self.stderr.write(self.style.ERROR("TMDB API error"))
-            return
+        if results is None:
+            url = "https://api.themoviedb.org/3/search/movie"
+            headers = {
+                "accept": "application/json",
+                "Authorization": f"Bearer {settings.TMDB_API_KEY}",
+            }
+            params = {"query": query, "page": page, "include_adult": include_adult, "language": "en-US"}
 
-        results = response.json().get("results", [])
+            response = requests.get(url, headers=headers, params=params)
+            if response.status_code != 200:
+                self.stderr.write(self.style.ERROR("TMDB API error"))
+                return
+
+            results = response.json().get("results", [])
+            cache.set(cache_key, results, timeout=60 * 15)  # Cache for 15 minutes
+
+            self.stdout.write(self.style.NOTICE("Fetched from TMDB API."))
+        else:
+            self.stdout.write(self.style.NOTICE("Loaded from cache."))
+
         if not results:
             self.stdout.write(self.style.WARNING("No results found."))
             return

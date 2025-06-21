@@ -7,6 +7,8 @@ from core.models import DataSource
 
 
 class MovieStatus(Enum):
+    """Status of a movie."""
+
     DRAFT = "draft"
     IN_REVIEW = "in_review"
     PUBLISHED = "published"
@@ -18,6 +20,8 @@ class MovieStatus(Enum):
 
 
 class MovieRating(Enum):
+    """Rating of a movie."""
+
     ONE_STAR = 1
     TWO_STARS = 2
     THREE_STARS = 3
@@ -37,6 +41,8 @@ class Genre(models.Model):
 
 
 class Review(PolymorphicModel):
+    """Base class for reviews."""
+
     rating = models.IntegerField(choices=MovieRating.choices(), default=MovieRating.THREE_STARS.value)
     comment = models.TextField()
 
@@ -45,6 +51,8 @@ class Review(PolymorphicModel):
 
 
 class MovieReview(Review):
+    """Review for a movie."""
+
     movie = models.ForeignKey("Movie", on_delete=models.CASCADE, related_name="reviews")
     created_by = models.ForeignKey("users.Spectator", on_delete=models.CASCADE, related_name="movies_reviews")
 
@@ -56,6 +64,8 @@ class MovieReview(Review):
 
 
 class AuthorReview(Review):
+    """Review for an author."""
+
     author = models.ForeignKey("users.Author", on_delete=models.CASCADE, related_name="reviews")
     created_by = models.ForeignKey(
         "users.Spectator", on_delete=models.CASCADE, related_name="authors_reviews"
@@ -66,6 +76,9 @@ class AuthorReview(Review):
 
     def __str__(self):
         return f"Review for {self.author.username}"
+
+
+# class MovieManager(models.Manager): ...
 
 
 class Movie(models.Model):
@@ -93,9 +106,11 @@ class Movie(models.Model):
 
     @property
     def average_rating(self):
+        """Calculate the average rating of the movie based on its reviews."""
         reviews = self.reviews.all()
         if not reviews:
             return None
+
         total_rating = sum(review.rating for review in reviews)
         return total_rating / len(reviews)
 

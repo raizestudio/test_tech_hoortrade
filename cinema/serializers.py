@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from cinema.models import AuthorReview, Genre, Movie, MovieReview
-from users.serializers import AuthorSerializer
+from users.serializers import AuthorSerializer, SpectatorSerializer
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -9,21 +9,6 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = ["id", "name"]
         read_only_fields = ["id"]
-
-
-class MovieReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MovieReview
-        fields = [
-            "id",
-            "rating",
-            "comment",
-            "movie",
-            "created_by",
-            "created_at",
-            "updated_at",
-        ]
-        read_only_fields = ["id", "created_at"]
 
 
 class AuthorReviewSerializer(serializers.ModelSerializer):
@@ -74,3 +59,21 @@ class MovieSerializer(serializers.ModelSerializer):
             rep.pop("source", None)
 
         return rep
+
+
+class MovieReviewSerializer(serializers.ModelSerializer):
+    movie = MovieSerializer(read_only=True)
+    created_by = SpectatorSerializer(read_only=True)
+
+    class Meta:
+        model = MovieReview
+        fields = [
+            "id",
+            "rating",
+            "comment",
+            "movie",
+            "created_by",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "created_at"]

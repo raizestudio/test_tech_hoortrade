@@ -50,6 +50,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.middlewares.QueryLoggerMiddleware",
 ]
 
 # Urls
@@ -151,6 +152,17 @@ CACHE_DB = env("CACHE_DB", default="")
 CACHE_TTL = env("CACHE_TTL", default=60)
 # CACHE_PASSWORD = env("CACHE_PASSWORD", default="")
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{CACHE_HOST}:{CACHE_PORT}/{CACHE_DB}",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": True,
+        },
+    }
+}
+
 # TMDB API
 TMDB_API_KEY = env("TMDB_API_KEY", default="")
 
@@ -177,9 +189,15 @@ LOGGING = {
             "formatter": "verbose",
         },
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "simple",
+        },
+        "query_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": LOG_DIR / "queries.log",
+            "formatter": "verbose",
         },
     },
     "loggers": {
@@ -188,8 +206,8 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
-        "auth_core": {
-            "handlers": ["file", "console"],
+        "query_logger": {
+            "handlers": ["query_file", "console"],
             "level": "DEBUG",
             "propagate": False,
         },

@@ -34,14 +34,21 @@ class AuthorReviewViewSet(ModelViewSet):
 class MovieReviewViewSet(ModelViewSet):
     """A viewset for viewing and editing movie review instances."""
 
-    queryset = MovieReview.objects.all()
+    queryset = MovieReview.objects.select_related(
+        "movie",
+        "created_by",
+        "created_by__polymorphic_ctype",
+        "created_by__baseuser_ptr",
+        "review_ptr",
+        "review_ptr__polymorphic_ctype",
+    ).prefetch_related("movie__genres", "movie__authors", "created_by__favorite_movies")
     serializer_class = MovieReviewSerializer
 
 
 class MovieViewSet(ModelViewSet):
     """A viewset for viewing and editing movie instances."""
 
-    queryset = Movie.objects.all()
+    queryset = Movie.objects.prefetch_related("genres", "authors").prefetch_related("reviews").all()
     serializer_class = MovieSerializer
     filterset_fields = ["title", "status", "source"]
     permission_classes = [IsAuthenticatedOrReadOnly]
