@@ -8,7 +8,7 @@ Application Django permettant la gestion d'une librairie de films.
 
 - [Installation](#installation)
 - [Utilisation](#utilisation)
-- [Exigences Techniques](#exigences techniques)
+- [Exigences Techniques](#exigences_techniques)
 - [Contribuer](#contribuer)
 - [License](#license)
 - [Contact](#contact)
